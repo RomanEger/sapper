@@ -1,0 +1,3 @@
+﻿  main.c
+D:\projects vs\C PROJECTS\sapper\First\First\main.c(27,8): warning C4244: функция: преобразование "time_t" в "unsigned int", возможна потеря данных
+  First.vcxproj -> D:\projects vs\C PROJECTS\sapper\First\x64\Debug\First.exe
