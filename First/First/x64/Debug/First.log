@@ -1,3 +1,6 @@
 ﻿  main.c
-D:\projects vs\C PROJECTS\sapper\First\First\main.c(27,8): warning C4244: функция: преобразование "time_t" в "unsigned int", возможна потеря данных
+D:\projects vs\C PROJECTS\sapper\First\First\main.c(120,8): warning C4244: функция: преобразование "time_t" в "unsigned int", возможна потеря данных
+D:\projects vs\C PROJECTS\sapper\First\First\main.c(51): warning C4715: ReadPosition: значение возвращается не при всех путях выполнения
+D:\projects vs\C PROJECTS\sapper\First\First\main.c(69): warning C4715: Read: значение возвращается не при всех путях выполнения
+D:\projects vs\C PROJECTS\sapper\First\First\main.c(105): warning C4716: IsBombAround: должна возвращать значение
   First.vcxproj -> D:\projects vs\C PROJECTS\sapper\First\x64\Debug\First.exe

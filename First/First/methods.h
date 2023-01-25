@@ -5,8 +5,10 @@
 #include<conio.h>
 
 //Выводит начальное игровое поле на консоль
-void StartField();
+void StartField(int);
 
 //Выводит и обновляет поле в процессе игры
-void GameField(); 
+void PrintField(); 
 
+//Генерирует бомбы
+void GetBombs();
