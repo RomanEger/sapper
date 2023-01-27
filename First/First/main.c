@@ -1,17 +1,17 @@
 #include "methods.h"
 
-int mines = 3;
-
-int bombs[3][2];
+int bombs[MINES][2];
 
 //игровое поле
 char field[8][8];
 
+int bombsField[8][8];
+
 //Координаты бомб по вертикали
-int bombX[3];
+int bombX[MINES];
 
 //Координаты бомб по горизонтали
-int bombY[3];
+int bombY[MINES];
 
 void PrintField()
 {
@@ -34,8 +34,6 @@ void PrintField()
 
 int ReadPosition()
 {
-	printf("Введите значение от 1 до 8:\t");
-
 	int pos;
 	#pragma warning(suppress : 4996)
 	scanf("%d", &pos);
@@ -70,43 +68,83 @@ int Read()
 
 int SetPos()
 {
+	printf("Введите значение по горизонтали от 1 до 8:\t");
 	int posX = ReadPosition();
+	printf("Введите значение по вертикали от 1 до 8:\t");
 	int posY = ReadPosition();
 
-	int posArr[] = {posY, posX};
-
-	for (int i = 0; i < mines; i++)
+	for (int i = 0; i < MINES; i++)
 	{
-		for (int j = 0; j < 1; j++)
+		if (bombs[i][0] == posY && bombs[i][1] == posX)
 		{
-			int m = j + 1;
-			if (bombs[i][j] == posArr[j] && bombs[i][m] == posArr[m])
-			{
-				printf("You lost\n");
-				return 1;
-			}
+			printf("You lost\n");
+			return 1;
 		}
 	}
+	int bombY = posY;
+	int bombX = posX;
+
+	int countBombsAround = 0;
+
+	//сверху
+	if (bombY > 0 && bombsField[bombY - 1][bombX] == 1)
+		{
+			countBombsAround++;
+		}
+	//сверху слева
+	if (bombX > 0 && bombY > 0 && bombsField[bombY - 1][bombX - 1] == 1)
+	{
+		countBombsAround++;
+	}
+	//сверху справа
+	if (bombY > 0 && bombX < 7 && bombsField[bombY - 1][bombX + 1] == 1)
+		{
+			countBombsAround++;
+		}
+	//слева
+	if (bombX > 0 && bombsField[bombY][bombX - 1] == 1)
+		{
+			countBombsAround++;
+		}
+	//справа
+	if (bombX < 7 && bombsField[bombY][bombX + 1] == 1)
+	{
+		countBombsAround++;
+	}
+	//снизу
+	if (bombY < 7 && bombsField[bombY + 1][bombX] == 1)
+	{
+		countBombsAround++;
+	}
+	//снизу слева
+	if (bombY < 7 && bombX > 0 && bombsField[bombY + 1][bombX - 1] == 1)
+		{
+			countBombsAround++;
+		}
+	//снизу справа
+	if (bombX < 7 && bombY < 7 && bombsField[bombY + 1][bombX + 1] == 1)
+		{
+			countBombsAround++;
+		}
+	
+	char bombsAround = countBombsAround + '0';
+
 	for(int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
 			if (i == posY && j == posX)
 			{
-				field[i][j] = '_';
+				field[i][j] = bombsAround;
 				return 0;
 			}
-		}	
+		}
+
 	return -1;
-}
-
-int IsBombAround()
-{
-
 }
 
 void BombCoord()
 {
-	for (int i = 0; i < mines; i++)
+	for (int i = 0; i < MINES; i++)
 	{
 		printf("%d: %d %d\t\t", i, bombY[i], bombX[i]);
 		printf("\n");
@@ -126,8 +164,8 @@ void StartField(int iteration)
 	if (iteration == 0)
 		GetBombs();
 	
-	for (int i = 0; i < mines; i++)
-		field[bombX[i]][bombY[i]] = '*';
+	for (int i = 0; i < MINES; i++)
+		bombsField[bombX[i]][bombY[i]] = 1;
 	printf("\n");
 
 	PrintField();
@@ -137,7 +175,7 @@ void StartField(int iteration)
 
 void GetBombs()
 {
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < MINES; i++)
 		for (int j = 0; j < 2; j++)
 		{
 			bombs[i][j] = rand() % 10;
@@ -145,9 +183,9 @@ void GetBombs()
 				bombs[i][j] -= 2;
 		}
 
-	for (int i = 0; i < mines; i++)
+	for (int i = 0; i < MINES; i++)
 		bombX[i] = bombs[i][0];
-	for (int i = 0; i < mines; i++)
+	for (int i = 0; i < MINES; i++)
 		bombY[i] = bombs[i][1];
 
 }
@@ -169,11 +207,24 @@ int CheckWin()
 	return 0;
 }
 
+void Clear()
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			bombsField[i][j] = 0;
+		}
+	}
+}
+
 int main() 
 {
 	setlocale(LC_ALL, "Ru"); //локализация
 	
 	int a = 1; 
+
+	int win = 1;
 	int iteration = 0;
 		
 	while (a == 1)
@@ -187,22 +238,30 @@ int main()
 
 		int g = SetPos();
 
-		a = CheckWin();
+		win = CheckWin();
+		if (win == 0)
+		{
+			printf("\nYou win!\n");
+			a = Read();
+			iteration = 0;
+			Clear();
+		}
 
 		if (g == 0)
 		{
 			system("cls");
 			PrintField();
 			iteration++;
+			Clear();
 		}
 		else
+		{
 			a = Read();
+			iteration = 0;
+			system("cls");
+			Clear();
+		}
 	}
-
-	if (a == 0)
-		printf("\nYou win!\n");
-
-	//getchar();
 
 	return 0;
 }

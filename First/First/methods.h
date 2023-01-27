@@ -4,6 +4,8 @@
 #include<time.h>
 #include<conio.h>
 
+#define MINES 5
+
 //¬ыводит начальное игровое поле на консоль
 void StartField(int);
 
