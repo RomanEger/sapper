@@ -77,6 +77,7 @@ int SetPos()
 	{
 		if (bombs[i][0] == posY && bombs[i][1] == posX)
 		{
+			system("cls");
 			printf("You lost\n");
 			return 1;
 		}
@@ -163,14 +164,12 @@ void StartField(int iteration)
 				field[i][j] = '#';
 	if (iteration == 0)
 		GetBombs();
-	
 	for (int i = 0; i < MINES; i++)
 		bombsField[bombX[i]][bombY[i]] = 1;
-	printf("\n");
-
 	PrintField();
+	printf("\n");
 	
-	getchar();
+	//getchar();
 }
 
 void GetBombs()
@@ -234,7 +233,7 @@ int main()
 			StartField(iteration);
 		}
 
-		BombCoord();
+		//BombCoord();
 
 		int g = SetPos();
 
@@ -252,10 +251,25 @@ int main()
 			system("cls");
 			PrintField();
 			iteration++;
-			Clear();
+			//Clear();
 		}
 		else
 		{
+			for (int i = 0; i < 8; i++)
+			{
+				for (int j = 0; j < 8; j++)
+				{
+					if (bombsField[i][j] == 0)
+					{
+						field[i][j] = '_';
+					}
+					else
+					{
+						field[i][j] = '*';
+					}
+				}
+			}
+			PrintField();
 			a = Read();
 			iteration = 0;
 			system("cls");
