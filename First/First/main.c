@@ -7,6 +7,8 @@ char field[8][8];
 
 int bombsField[8][8];
 
+char winField[8][8];
+
 // оординаты бомб по вертикали
 int bombX[MINES];
 
@@ -135,6 +137,7 @@ int SetPos()
 		{
 			if (i == posY && j == posX)
 			{
+				winField[i][j] = '_';
 				field[i][j] = bombsAround;
 				return 0;
 			}
@@ -161,15 +164,21 @@ void StartField(int iteration)
 	//заполнение массива координат рандомными значени€ми от 0 до 7 включительно
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
+		{
 				field[i][j] = '#';
+				winField[i][j] = '#';
+		}
+	
 	if (iteration == 0)
 		GetBombs();
 	for (int i = 0; i < MINES; i++)
+	{
 		bombsField[bombX[i]][bombY[i]] = 1;
+		winField[bombX[i]][bombY[i]] = '*';
+	}
+	
 	PrintField();
 	printf("\n");
-	
-	//getchar();
 }
 
 void GetBombs()
@@ -196,7 +205,7 @@ int CheckWin()
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (field[i][j] == win)
+			if (winField[i][j] == win)
 			{
 				return 1;
 			}
