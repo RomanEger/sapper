@@ -1,13 +1,48 @@
 #include "methods.h"
+//void Level()
+//{
+//	int lvl;
+//	printf("Выберите уровень сложности\n1. Простой (1-10 мин, поле 9х9).\n2. Средний (1-40 мин, поле 16х16).\n");
+//	
+//	#pragma warning(suppress : 4996)
+//	scanf("%d", &lvl);
+//
+//	switch (lvl)
+//	{
+//	case 1:
+//	{
+//		
+//		break;
+//	}
+//	case 2: 
+//	{
+//		#undef MINES
+//		#define MINES 40
+//		#undef SIDE
+//		#define SIDE 16
+//		break;
+//	}
+//		default: 
+//		{
+//			printf("Введено некорректное значение, нажмите любую кнопку для продолжения...");
+//			getchar();
+//			system("cls");
+//			Level();
+//			break;
+//		}
+//	}
+//}
 
 int bombs[MINES][2];
 
 //игровое поле
-char field[8][8];
+char field[SIDE][SIDE];
 
-int bombsField[8][8];
+//поле с минами
+int bombsField[SIDE][SIDE];
 
-char winField[8][8];
+//для проверки на победу
+char winField[SIDE][SIDE];
 
 //Координаты бомб по вертикали
 int bombX[MINES];
@@ -15,18 +50,38 @@ int bombX[MINES];
 //Координаты бомб по горизонтали
 int bombY[MINES];
 
+//демонстрация игрового поля в конце игры
+void FinalField()
+{
+	for (int i = 0; i < SIDE; i++)
+		for (int j = 0; j < SIDE; j++)
+			if (bombsField[i][j] == 0)
+				field[i][j] = '_';
+			else
+				field[i][j] = '*';
+}
+
+//вывод игрового поля на экран
 void PrintField()
 {
 	int n = 0;
-	printf("  ");
-	for (int i = 1; i < 9; i++)
+	printf("   ");
+	for (int i = 1; i <= SIDE; i++)
 		printf("%d ", i);
 	printf("\n");
-	for (int i = 0; i < 8; i++)
+	printf("   ");
+	for (int i = 1; i <= SIDE; i++)
+		printf("__");
+	printf("\n");
+
+	for (int i = 0; i < SIDE; i++)
 	{
 		n++;
-		printf("%d ", n);
-		for (int j = 0; j < 8; j++)
+		if (i < 9)
+			printf("%d |", n);
+		else
+			printf("%d|", n);
+		for (int j = 0; j < SIDE; j++)
 		{
 			printf("%c ", field[i][j]);
 		}
@@ -34,6 +89,7 @@ void PrintField()
 	}
 }
 
+//возвращает позицию, введенную с клавиатуры
 int ReadPosition()
 {
 	int pos;
@@ -41,7 +97,7 @@ int ReadPosition()
 	scanf("%d", &pos);
 
 	printf("\n");
-	if (pos > 0 && pos <= 8)
+	if (pos > 0 && pos <= SIDE)
 		return --pos;
 	else
 	{
@@ -50,7 +106,8 @@ int ReadPosition()
 	}
 }
 
-int Read()
+//позволяет начать игру снова или завершить ее после проигрыша
+int Restart()
 {
 	printf("\n1 - Play again\n0 - Stop\n");
 
@@ -64,15 +121,17 @@ int Read()
 	else
 	{
 		printf("Введены некорректные значения, попробуйте заново.\n");
-		Read();
+		Restart();
 	}
 }
 
+//выводит сообщение о проигрыше, если игрок попал на мину, подсчитывает кол-во мин вокруг 
+//в идеале разбить на несколько функций
 int SetPos()
 {
-	printf("Введите значение по горизонтали от 1 до 8:\t");
+	printf("Введите значение по горизонтали от 1 до 9:\t");
 	int posX = ReadPosition();
-	printf("Введите значение по вертикали от 1 до 8:\t");
+	printf("Введите значение по вертикали от 1 до 9:\t");
 	int posY = ReadPosition();
 
 	for (int i = 0; i < MINES; i++)
@@ -100,7 +159,7 @@ int SetPos()
 		countBombsAround++;
 	}
 	//сверху справа
-	if (bombY > 0 && bombX < 7 && bombsField[bombY - 1][bombX + 1] == 1)
+	if (bombY > 0 && bombX < SIDE-1 && bombsField[bombY - 1][bombX + 1] == 1)
 		{
 			countBombsAround++;
 		}
@@ -110,30 +169,30 @@ int SetPos()
 			countBombsAround++;
 		}
 	//справа
-	if (bombX < 7 && bombsField[bombY][bombX + 1] == 1)
+	if (bombX < SIDE-1 && bombsField[bombY][bombX + 1] == 1)
 	{
 		countBombsAround++;
 	}
 	//снизу
-	if (bombY < 7 && bombsField[bombY + 1][bombX] == 1)
+	if (bombY < SIDE-1 && bombsField[bombY + 1][bombX] == 1)
 	{
 		countBombsAround++;
 	}
 	//снизу слева
-	if (bombY < 7 && bombX > 0 && bombsField[bombY + 1][bombX - 1] == 1)
+	if (bombY < SIDE-1 && bombX > 0 && bombsField[bombY + 1][bombX - 1] == 1)
 		{
 			countBombsAround++;
 		}
 	//снизу справа
-	if (bombX < 7 && bombY < 7 && bombsField[bombY + 1][bombX + 1] == 1)
+	if (bombX < SIDE-1 && bombY < SIDE-1 && bombsField[bombY + 1][bombX + 1] == 1)
 		{
 			countBombsAround++;
 		}
 	
 	char bombsAround = countBombsAround + '0';
 
-	for(int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
+	for(int i = 0; i < SIDE; i++)
+		for (int j = 0; j < SIDE; j++)
 		{
 			if (i == posY && j == posX)
 			{
@@ -143,9 +202,11 @@ int SetPos()
 			}
 		}
 
-	return -1;
+	return 1;
 }
 
+//выводит на экран координаты бомб
+//только для тестов 
 void BombCoord()
 {
 	for (int i = 0; i < MINES; i++)
@@ -155,6 +216,7 @@ void BombCoord()
 	}
 }
 
+//заполняет массивы поля, координата бомб, вызывает функцию вывода поля на экран
 void StartField(int iteration)
 {
 	int n = 0;
@@ -162,8 +224,8 @@ void StartField(int iteration)
 	srand(time(NULL));
 	
 	//заполнение массива координат рандомными значениями от 0 до 7 включительно
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
+	for (int i = 0; i < SIDE; i++)
+		for (int j = 0; j < SIDE; j++)
 		{
 				field[i][j] = '#';
 				winField[i][j] = '#';
@@ -181,6 +243,7 @@ void StartField(int iteration)
 	printf("\n");
 }
 
+//генерирует мины
 void GetBombs()
 {
 	for (int i = 0; i < MINES; i++)
@@ -198,12 +261,13 @@ void GetBombs()
 
 }
 
+//проверяет, достигнуты ли условия победы
 int CheckWin()
 {
 	char win = '#';
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < SIDE; i++)
 	{
-		for (int j = 0; j < 8; j++)
+		for (int j = 0; j < SIDE; j++)
 		{
 			if (winField[i][j] == win)
 			{
@@ -215,16 +279,18 @@ int CheckWin()
 	return 0;
 }
 
+//"очищает" массив с координатами бомб при рестарте игры
 void Clear()
 {
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < SIDE; i++)
 	{
-		for (int j = 0; j < 8; j++)
+		for (int j = 0; j < SIDE; j++)
 		{
 			bombsField[i][j] = 0;
 		}
 	}
 }
+
 
 int main() 
 {
@@ -239,18 +305,22 @@ int main()
 	{
 		if (iteration == 0)
 		{
+			//Level();
+			system("cls");
 			StartField(iteration);
 		}
 
-		//BombCoord();
 
 		int g = SetPos();
 
 		win = CheckWin();
 		if (win == 0)
 		{
+			system("cls");
+			FinalField();
+			PrintField();
 			printf("\nYou win!\n");
-			a = Read();
+			a = Restart();
 			iteration = 0;
 			Clear();
 		}
@@ -264,22 +334,10 @@ int main()
 		}
 		else
 		{
-			for (int i = 0; i < 8; i++)
-			{
-				for (int j = 0; j < 8; j++)
-				{
-					if (bombsField[i][j] == 0)
-					{
-						field[i][j] = '_';
-					}
-					else
-					{
-						field[i][j] = '*';
-					}
-				}
-			}
+			system("cls");
+			FinalField();
 			PrintField();
-			a = Read();
+			a = Restart();
 			iteration = 0;
 			system("cls");
 			Clear();

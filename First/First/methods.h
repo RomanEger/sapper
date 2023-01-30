@@ -4,13 +4,11 @@
 #include<time.h>
 #include<conio.h>
 
-#define MINES 5
+#define MINES 10
+#define SIDE 9
 
-//Выводит начальное игровое поле на консоль
 void StartField(int);
 
-//Выводит и обновляет поле в процессе игры
 void PrintField(); 
 
-//Генерирует бомбы
 void GetBombs();
