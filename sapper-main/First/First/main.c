@@ -48,7 +48,7 @@ int ReadPosition()
 	scanf("%d", &pos);
 
 	printf("\n");
-	if (pos > 0 && pos <= 88)
+	if (pos > 10 && pos <= 88 && pos%10 != 0)
 		return pos;
 	else
 	{
@@ -229,6 +229,7 @@ int OpenSpace(int posX, int posY, int bombs, int cache[])
 			
 		}
 	}
+	return 0;
 	
 }
 
