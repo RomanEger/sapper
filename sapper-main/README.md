@@ -1,2 +1,2 @@
-# sapper 
+# sapper
 проект на си
