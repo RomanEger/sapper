@@ -95,10 +95,8 @@ int SetPos()
 			return 1;
 		}
 	}
-	int bombY = posY;
-	int bombX = posX;
 
-	int countBombsAround = CountBobsAround(posX,posY);
+	//int countBombsAround = CountBobsAround(posX,posY);
 	
 	
 		
@@ -106,7 +104,7 @@ int SetPos()
 	for (int i = 0; i < 8 * 8;i++)
 		cache[i] = 0;
 
-	return OpenSpace(posX, posY, countBombsAround,cache);
+	return OpenSpace(posX, posY,cache);
 
 		
 
@@ -120,46 +118,37 @@ int CountBobsAround(int posX,int posY)
 
 	int countBombsAround = 0;
 
+	int localX = -1;
+	int localY = -1;
+	do
+	{
+		//проверка на выход за пределы массива
+		if (bombY + localY < 0 || bombX + localX < 0 || bombY + localY >= 8 || bombX + localX >= 8)
+		{
+			localX++;
+			if (localX == 2)
+			{
+				localX = -1;
+				localY++;
+			}
+			if (localY == 2)
+				break;
+			continue;
+		}
+		if (bombsField[bombY + localY][bombX + localX] == -1)
+		{
+			countBombsAround++;
+		}
+		localX++;
+		if (localX == 2)
+		{
+			localX = -1;
+			localY++;
+		}
+
+	} while (localY != 2);
 	//сверху
-	if (bombY > 0 && bombsField[bombY - 1][bombX] == 1)
-	{
-		countBombsAround++;
-	}
-	//сверху слева
-	if (bombX > 0 && bombY > 0 && bombsField[bombY - 1][bombX - 1] == 1)
-	{
-		countBombsAround++;
-	}
-	//сверху справа
-	if (bombY > 0 && bombX < 7 && bombsField[bombY - 1][bombX + 1] == 1)
-	{
-		countBombsAround++;
-	}
-	//слева
-	if (bombX > 0 && bombsField[bombY][bombX - 1] == 1)
-	{
-		countBombsAround++;
-	}
-	//справа
-	if (bombX < 7 && bombsField[bombY][bombX + 1] == 1)
-	{
-		countBombsAround++;
-	}
-	//снизу
-	if (bombY < 7 && bombsField[bombY + 1][bombX] == 1)
-	{
-		countBombsAround++;
-	}
-	//снизу слева
-	if (bombY < 7 && bombX > 0 && bombsField[bombY + 1][bombX - 1] == 1)
-	{
-		countBombsAround++;
-	}
-	//снизу справа
-	if (bombX < 7 && bombY < 7 && bombsField[bombY + 1][bombX + 1] == 1)
-	{
-		countBombsAround++;
-	}
+	
 	return countBombsAround;
 }
 
@@ -171,7 +160,7 @@ int SetNumberCell(int posX, int posY, int countBombs)
 		{
 			if (i == posY && j == posX)
 			{
-				winField[i][j] = '_';
+				winField[i][j] = '.';
 				field[i][j] = bombsAround;
 				return 0;
 			}
@@ -180,9 +169,10 @@ int SetNumberCell(int posX, int posY, int countBombs)
 
 }
 //Само открытие пустых клеток
-int OpenSpace(int posX, int posY, int bombs, int cache[])
+int OpenSpace(int posX, int posY, int cache[])
 {
-	
+	if (posX < 0 || posY < 0 || posX>7 || posY>7)
+		return 0;
 	
 	//Была ли эта клетка уже проверена
 	for (int i = 0; i < 8*8; i++)
@@ -193,13 +183,13 @@ int OpenSpace(int posX, int posY, int bombs, int cache[])
 			break;
 		}
 		else if (cache[i] == (posX + 1) * 10 + (posY + 1))
-			return;
-		
+			return 0;	
 	}
+	int aroundBombs = CountBobsAround(posX, posY);
 
-	if (bombs != 0)
+	if (aroundBombs != 0)
 	{
-		return SetNumberCell(posX, posY, bombs);
+		return SetNumberCell(posX, posY, aroundBombs);
 	}
 	else
 	{
@@ -207,27 +197,27 @@ int OpenSpace(int posX, int posY, int bombs, int cache[])
 		//Левый верхний угол относительной той клетки которую мы выбрали
 		int localX = -1;
 		int localY = -1;
-		while (localY != 2)
+		do
 		{
-			int aroundBombs = CountBobsAround(posX + localX, posY + localY);
-			SetNumberCell(posX, posY, aroundBombs);
+			//posX = Ogranichenie(posX);
+			//posY = Ogranichenie(posY);
+			//if (posX == 0 || posY == 0 || posX == 8 || posY == 8)
 			//ограничение posXY
-			posX = Ogranichenie(posX);
-			posY = Ogranichenie(posY);
-			if (posX == 0 || posY == 0 || posX == 8 || posY == 8)
-				break;
+			//if(posX< 0 || posY < 0 || posX>8 || posY>8)
+			//	break;
+			SetNumberCell(posX, posY, aroundBombs);
 			
 			//Открытие еще клетки и подсчет кол бомб вокруг 
-			OpenSpace(posX + localX, posY + localY, aroundBombs,cache);
+			OpenSpace(posX + localX, posY + localY, cache);
 			
-			if (localX == 1)
+			localX++;
+			if (localX == 2)
 			{
 				localX = -1;
 				localY++;
 			}
-			localX++;
 			
-		}
+		} while (localY != 2);
 	}
 	return 0;
 	
@@ -270,7 +260,7 @@ void StartField(int iteration)
 		GetBombs();
 	for (int i = 0; i < MINES; i++)
 	{
-		bombsField[bombX[i]][bombY[i]] = 1;
+		bombsField[bombX[i]][bombY[i]] = -1;
 		winField[bombX[i]][bombY[i]] = '*';
 	}
 	
@@ -384,4 +374,6 @@ int main()
 	}
 
 	return 0;
+
+	
 }
