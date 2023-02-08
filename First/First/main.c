@@ -1,8 +1,8 @@
-#include "methods.h"
+п»ї#include "methods.h"
 //void Level()
 //{
 //	int lvl;
-//	printf("Выберите уровень сложности\n1. Простой (1-10 мин, поле 9х9).\n2. Средний (1-40 мин, поле 16х16).\n");
+//	printf("Р’С‹Р±РµСЂРёС‚Рµ СѓСЂРѕРІРµРЅСЊ СЃР»РѕР¶РЅРѕСЃС‚Рё\n1. РџСЂРѕСЃС‚РѕР№ (1-10 РјРёРЅ, РїРѕР»Рµ 9С…9).\n2. РЎСЂРµРґРЅРёР№ (1-40 РјРёРЅ, РїРѕР»Рµ 16С…16).\n");
 //	
 //	#pragma warning(suppress : 4996)
 //	scanf("%d", &lvl);
@@ -24,7 +24,7 @@
 //	}
 //		default: 
 //		{
-//			printf("Введено некорректное значение, нажмите любую кнопку для продолжения...");
+//			printf("Р’РІРµРґРµРЅРѕ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ, РЅР°Р¶РјРёС‚Рµ Р»СЋР±СѓСЋ РєРЅРѕРїРєСѓ РґР»СЏ РїСЂРѕРґРѕР»Р¶РµРЅРёСЏ...");
 //			getchar();
 //			system("cls");
 //			Level();
@@ -35,22 +35,24 @@
 
 int bombs[MINES][2];
 
-//игровое поле
+//РёРіСЂРѕРІРѕРµ РїРѕР»Рµ
 char field[SIDE][SIDE];
 
-//поле с минами
+//РїРѕР»Рµ СЃ РјРёРЅР°РјРё
 int bombsField[SIDE][SIDE];
 
-//для проверки на победу
+//РґР»СЏ РїСЂРѕРІРµСЂРєРё РЅР° РїРѕР±РµРґСѓ
 char winField[SIDE][SIDE];
 
-//Координаты бомб по вертикали
+//РљРѕРѕСЂРґРёРЅР°С‚С‹ Р±РѕРјР± РїРѕ РІРµСЂС‚РёРєР°Р»Рё
 int bombX[MINES];
 
-//Координаты бомб по горизонтали
+//РљРѕРѕСЂРґРёРЅР°С‚С‹ Р±РѕРјР± РїРѕ РіРѕСЂРёР·РѕРЅС‚Р°Р»Рё
 int bombY[MINES];
 
-//демонстрация игрового поля в конце игры
+
+
+//РґРµРјРѕРЅСЃС‚СЂР°С†РёСЏ РёРіСЂРѕРІРѕРіРѕ РїРѕР»СЏ РІ РєРѕРЅС†Рµ РёРіСЂС‹
 void FinalField()
 {
 	for (int i = 0; i < SIDE; i++)
@@ -61,7 +63,7 @@ void FinalField()
 				field[i][j] = '*';
 }
 
-//вывод игрового поля на экран
+//РІС‹РІРѕРґ РёРіСЂРѕРІРѕРіРѕ РїРѕР»СЏ РЅР° СЌРєСЂР°РЅ
 void PrintField()
 {
 	int n = 0;
@@ -81,15 +83,17 @@ void PrintField()
 			printf("%d |", n);
 		else
 			printf("%d|", n);
-		for (int j = 0; j < SIDE; j++)
+		for (int j = 0; j < SIDE-1; j++)
 		{
 			printf("%c ", field[i][j]);
 		}
+		printf("%c", field[i][SIDE-1]);
+		printf("|");
 		printf("\n");
 	}
 }
 
-//возвращает позицию, введенную с клавиатуры
+//РІРѕР·РІСЂР°С‰Р°РµС‚ РїРѕР·РёС†РёСЋ, РІРІРµРґРµРЅРЅСѓСЋ СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
 int ReadPosition()
 {
 	int pos;
@@ -97,16 +101,16 @@ int ReadPosition()
 	scanf("%d", &pos);
 
 	printf("\n");
-	if (pos > 0 && pos <= SIDE)
-		return --pos;
+	if (pos > 10 && pos <= 99 && pos%10 > 0)
+		return (pos-11);
 	else
 	{
-		printf("Введены некорректные значения, попробуйте заново.\n");
+		printf("Р’РІРµРґРµРЅС‹ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, РїРѕРїСЂРѕР±СѓР№С‚Рµ Р·Р°РЅРѕРІРѕ.\n");
 		ReadPosition();
 	}
 }
 
-//позволяет начать игру снова или завершить ее после проигрыша
+//РїРѕР·РІРѕР»СЏРµС‚ РЅР°С‡Р°С‚СЊ РёРіСЂСѓ СЃРЅРѕРІР° РёР»Рё Р·Р°РІРµСЂС€РёС‚СЊ РµРµ РїРѕСЃР»Рµ РїСЂРѕРёРіСЂС‹С€Р°
 int Restart()
 {
 	printf("\n1 - Play again\n0 - Stop\n");
@@ -120,93 +124,191 @@ int Restart()
 		return 1;
 	else
 	{
-		printf("Введены некорректные значения, попробуйте заново.\n");
+		printf("Р’РІРµРґРµРЅС‹ РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ, РїРѕРїСЂРѕР±СѓР№С‚Рµ Р·Р°РЅРѕРІРѕ.\n");
 		Restart();
 	}
 }
 
-//выводит сообщение о проигрыше, если игрок попал на мину, подсчитывает кол-во мин вокруг 
-//в идеале разбить на несколько функций
+int Filling(int countBombsAround, int posY, int posX)
+{
+	char bombsAround = countBombsAround + '0';
+
+	for (int i = 0; i < SIDE; i++)
+		for (int j = 0; j < SIDE; j++)
+			if (i == posY && j == posX)
+			{
+				winField[i][j] = '_';
+				field[i][j] = bombsAround;
+
+				return 0;
+			}
+	return -1;
+}
+
+int BombsAround(int posY, int posX)
+{
+	int countBombsAround = 0;
+	
+	int localX = -1;
+	int localY = -1;
+	do
+	{
+		//РїСЂРѕРІРµСЂРєР° РЅР° РІС‹С…РѕРґ Р·Р° РїСЂРµРґРµР»С‹ РјР°СЃСЃРёРІР°
+		if (posY + localY < 0 || posX + localX < 0 || posY + localY >= SIDE || posX + localX >= SIDE)
+		{
+			localX++;
+			if (localX == 2)
+			{
+				localX = -1;
+				localY++;
+			}
+			if (localY == 2)
+				break;
+			continue;
+		}
+		if (bombsField[posY + localY][posX + localX] == 1)
+		{
+			countBombsAround++;
+		}
+		localX++;
+		if (localX == 2)
+		{
+			localX = -1;
+			localY++;
+		}
+
+	} while (localY != 2);
+
+	////СЃРІРµСЂС…Сѓ
+	//if (posY > 0 && bombsField[posY - 1][posX] == 1)
+	//{
+	//	countBombsAround++;
+	//}
+	////СЃРІРµСЂС…Сѓ СЃР»РµРІР°
+	//if (posX > 0 && posY > 0 && bombsField[posY - 1][posX - 1] == 1)
+	//{
+	//	countBombsAround++;
+	//}
+	////СЃРІРµСЂС…Сѓ СЃРїСЂР°РІР°
+	//if (posY > 0 && posX < SIDE - 1 && bombsField[posY - 1][posX + 1] == 1)
+	//{
+	//	countBombsAround++;
+	//}
+	////СЃР»РµРІР°
+	//if (posX > 0 && bombsField[posY][posX - 1] == 1)
+	//{
+	//	countBombsAround++;
+	//}
+	////СЃРїСЂР°РІР°
+	//if (posX < SIDE - 1 && bombsField[posY][posX + 1] == 1)
+	//{
+	//	countBombsAround++;
+	//}
+	////СЃРЅРёР·Сѓ
+	//if (posY < SIDE - 1 && bombsField[posY + 1][posX] == 1)
+	//{
+	//	countBombsAround++;
+	//}
+	////СЃРЅРёР·Сѓ СЃР»РµРІР°
+	//if (posY < SIDE - 1 && posX > 0 && bombsField[posY + 1][posX - 1] == 1)
+	//{
+	//	countBombsAround++;
+	//}
+	////СЃРЅРёР·Сѓ СЃРїСЂР°РІР°
+	//if (posX < SIDE - 1 && posY < SIDE - 1 && bombsField[posY + 1][posX + 1] == 1)
+	//{
+	//	countBombsAround++;
+	//}
+	
+	return countBombsAround;
+}
+
+int OpenSpace(int posY, int posX, int cache[])
+{
+
+	if (posX < 0 || posY < 0 || posX > (SIDE - 1) || posY > (SIDE - 1))
+		return 1;
+
+	//Р‘С‹Р»Р° Р»Рё СЌС‚Р° РєР»РµС‚РєР° СѓР¶Рµ РїСЂРѕРІРµСЂРµРЅР°
+	for (int i = 0; i < 8 * 8; i++)
+	{
+		if (cache[i] == 0)
+		{
+			cache[i] = (posX + 1) * 10 + (posY + 1);
+			break;
+		}
+		else if (cache[i] == (posX + 1) * 10 + (posY + 1))
+			return 1;
+
+	}
+
+	int aroundBombs = BombsAround(posY, posX);
+	
+	if (aroundBombs != 0)
+	{
+		return Filling(aroundBombs, posY, posX);
+	}
+
+	else
+	{
+
+		//Р›РµРІС‹Р№ РІРµСЂС…РЅРёР№ СѓРіРѕР» РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕР№ С‚РѕР№ РєР»РµС‚РєРё РєРѕС‚РѕСЂСѓСЋ РјС‹ РІС‹Р±СЂР°Р»Рё
+		int localX = -1;
+		int localY = -1;
+		do
+		{
+			Filling(aroundBombs, posY, posX);
+			
+			OpenSpace(posY + localY, posX + localX, cache);
+
+			localX++;
+			if (localX == 2)
+			{
+				localX = -1;
+				localY++;
+			}
+
+		} while (localY != 2);
+	}
+	return 0;
+
+}
+//РІС‹РІРѕРґРёС‚ СЃРѕРѕР±С‰РµРЅРёРµ Рѕ РїСЂРѕРёРіСЂС‹С€Рµ, РµСЃР»Рё РёРіСЂРѕРє РїРѕРїР°Р» РЅР° РјРёРЅСѓ, РїРѕРґСЃС‡РёС‚С‹РІР°РµС‚ РєРѕР»-РІРѕ РјРёРЅ РІРѕРєСЂСѓРі 
+//РІ РёРґРµР°Р»Рµ СЂР°Р·Р±РёС‚СЊ РЅР° РЅРµСЃРєРѕР»СЊРєРѕ С„СѓРЅРєС†РёР№
 int SetPos()
 {
-	printf("Введите значение по горизонтали от 1 до 9:\t");
-	int posX = ReadPosition();
-	printf("Введите значение по вертикали от 1 до 9:\t");
-	int posY = ReadPosition();
+	printf("Р’РІРµРґРёС‚Рµ Р·РЅР°С‡РµРЅРёРµ РІ С„РѕСЂРјР°С‚Рµ XY:\t");
+	int position = ReadPosition();
+	int posX = position/10;
+	int posY = position%10;
 
 	for (int i = 0; i < MINES; i++)
 	{
 		if (bombs[i][0] == posY && bombs[i][1] == posX)
 		{
 			system("cls");
-			printf("You lost\n");
 			return 1;
 		}
 	}
-	int bombY = posY;
-	int bombX = posX;
 
-	int countBombsAround = 0;
-
-	//сверху
-	if (bombY > 0 && bombsField[bombY - 1][bombX] == 1)
-		{
-			countBombsAround++;
-		}
-	//сверху слева
-	if (bombX > 0 && bombY > 0 && bombsField[bombY - 1][bombX - 1] == 1)
-	{
-		countBombsAround++;
-	}
-	//сверху справа
-	if (bombY > 0 && bombX < SIDE-1 && bombsField[bombY - 1][bombX + 1] == 1)
-		{
-			countBombsAround++;
-		}
-	//слева
-	if (bombX > 0 && bombsField[bombY][bombX - 1] == 1)
-		{
-			countBombsAround++;
-		}
-	//справа
-	if (bombX < SIDE-1 && bombsField[bombY][bombX + 1] == 1)
-	{
-		countBombsAround++;
-	}
-	//снизу
-	if (bombY < SIDE-1 && bombsField[bombY + 1][bombX] == 1)
-	{
-		countBombsAround++;
-	}
-	//снизу слева
-	if (bombY < SIDE-1 && bombX > 0 && bombsField[bombY + 1][bombX - 1] == 1)
-		{
-			countBombsAround++;
-		}
-	//снизу справа
-	if (bombX < SIDE-1 && bombY < SIDE-1 && bombsField[bombY + 1][bombX + 1] == 1)
-		{
-			countBombsAround++;
-		}
 	
-	char bombsAround = countBombsAround + '0';
+	//int countBombsAround = 0;
 
-	for(int i = 0; i < SIDE; i++)
-		for (int j = 0; j < SIDE; j++)
-		{
-			if (i == posY && j == posX)
-			{
-				winField[i][j] = '_';
-				field[i][j] = bombsAround;
-				return 0;
-			}
-		}
+	//countBombsAround = BombsAround(posY, posX);
+	
+	//Filling(countBombsAround, posY, posX);
 
-	return 1;
+	int cache[SIDE * SIDE];
+	for (int i = 0; i < SIDE*SIDE; i++)
+	{
+		cache[i] = 0;
+	}
+
+	return OpenSpace(posY, posX, cache);
 }
 
-//выводит на экран координаты бомб
-//только для тестов 
+//РІС‹РІРѕРґРёС‚ РЅР° СЌРєСЂР°РЅ РєРѕРѕСЂРґРёРЅР°С‚С‹ Р±РѕРјР±
+//С‚РѕР»СЊРєРѕ РґР»СЏ С‚РµСЃС‚РѕРІ 
 void BombCoord()
 {
 	for (int i = 0; i < MINES; i++)
@@ -216,14 +318,14 @@ void BombCoord()
 	}
 }
 
-//заполняет массивы поля, координата бомб, вызывает функцию вывода поля на экран
+//Р·Р°РїРѕР»РЅСЏРµС‚ РјР°СЃСЃРёРІС‹ РїРѕР»СЏ, РєРѕРѕСЂРґРёРЅР°С‚Р° Р±РѕРјР±, РІС‹Р·С‹РІР°РµС‚ С„СѓРЅРєС†РёСЋ РІС‹РІРѕРґР° РїРѕР»СЏ РЅР° СЌРєСЂР°РЅ
 void StartField(int iteration)
 {
 	int n = 0;
 
 	srand(time(NULL));
 	
-	//заполнение массива координат рандомными значениями от 0 до 7 включительно
+	//Р·Р°РїРѕР»РЅРµРЅРёРµ РјР°СЃСЃРёРІР° РєРѕРѕСЂРґРёРЅР°С‚ СЂР°РЅРґРѕРјРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё РѕС‚ 0 РґРѕ 7 РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ
 	for (int i = 0; i < SIDE; i++)
 		for (int j = 0; j < SIDE; j++)
 		{
@@ -243,7 +345,7 @@ void StartField(int iteration)
 	printf("\n");
 }
 
-//генерирует мины
+//РіРµРЅРµСЂРёСЂСѓРµС‚ РјРёРЅС‹
 void GetBombs()
 {
 	for (int i = 0; i < MINES; i++)
@@ -261,7 +363,7 @@ void GetBombs()
 
 }
 
-//проверяет, достигнуты ли условия победы
+//РїСЂРѕРІРµСЂСЏРµС‚, РґРѕСЃС‚РёРіРЅСѓС‚С‹ Р»Рё СѓСЃР»РѕРІРёСЏ РїРѕР±РµРґС‹
 int CheckWin()
 {
 	char win = '#';
@@ -279,7 +381,7 @@ int CheckWin()
 	return 0;
 }
 
-//"очищает" массив с координатами бомб при рестарте игры
+//"РѕС‡РёС‰Р°РµС‚" РјР°СЃСЃРёРІ СЃ РєРѕРѕСЂРґРёРЅР°С‚Р°РјРё Р±РѕРјР± РїСЂРё СЂРµСЃС‚Р°СЂС‚Рµ РёРіСЂС‹
 void Clear()
 {
 	for (int i = 0; i < SIDE; i++)
@@ -287,6 +389,8 @@ void Clear()
 		for (int j = 0; j < SIDE; j++)
 		{
 			bombsField[i][j] = 0;
+			field[i][j] = '#';
+			winField[i][j] = '#';
 		}
 	}
 }
@@ -294,7 +398,7 @@ void Clear()
 
 int main() 
 {
-	setlocale(LC_ALL, "Ru"); //локализация
+	setlocale(LC_ALL, "Ru"); //Р»РѕРєР°Р»РёР·Р°С†РёСЏ
 	
 	int a = 1; 
 
@@ -310,6 +414,7 @@ int main()
 			StartField(iteration);
 		}
 
+		//BombCoord();
 
 		int g = SetPos();
 
@@ -323,6 +428,7 @@ int main()
 			a = Restart();
 			iteration = 0;
 			Clear();
+			continue;
 		}
 
 		if (g == 0)
@@ -334,15 +440,17 @@ int main()
 		}
 		else
 		{
-			system("cls");
+			//system("cls");
 			FinalField();
 			PrintField();
+			printf("\nYou lost!\n");
 			a = Restart();
 			iteration = 0;
 			system("cls");
 			Clear();
 		}
 	}
+
 
 	return 0;
 }
