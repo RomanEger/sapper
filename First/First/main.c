@@ -1,37 +1,5 @@
 ﻿#include "methods.h"
-//void Level()
-//{
-//	int lvl;
-//	printf("Выберите уровень сложности\n1. Простой (1-10 мин, поле 9х9).\n2. Средний (1-40 мин, поле 16х16).\n");
-//	
-//	#pragma warning(suppress : 4996)
-//	scanf("%d", &lvl);
-//
-//	switch (lvl)
-//	{
-//	case 1:
-//	{
-//		
-//		break;
-//	}
-//	case 2: 
-//	{
-//		#undef MINES
-//		#define MINES 40
-//		#undef SIDE
-//		#define SIDE 16
-//		break;
-//	}
-//		default: 
-//		{
-//			printf("Введено некорректное значение, нажмите любую кнопку для продолжения...");
-//			getchar();
-//			system("cls");
-//			Level();
-//			break;
-//		}
-//	}
-//}
+
 
 int bombs[MINES][2];
 
@@ -129,6 +97,7 @@ int Restart()
 	}
 }
 
+//заполнение массивов
 int Filling(int countBombsAround, int posY, int posX)
 {
 	char bombsAround = countBombsAround + '0';
@@ -139,12 +108,12 @@ int Filling(int countBombsAround, int posY, int posX)
 			{
 				winField[i][j] = '_';
 				field[i][j] = bombsAround;
-
 				return 0;
 			}
 	return -1;
 }
 
+//подсчет кол-ва мин вокруг текущей клетки
 int BombsAround(int posY, int posX)
 {
 	int countBombsAround = 0;
@@ -179,50 +148,12 @@ int BombsAround(int posY, int posX)
 
 	} while (localY != 2);
 
-	////сверху
-	//if (posY > 0 && bombsField[posY - 1][posX] == 1)
-	//{
-	//	countBombsAround++;
-	//}
-	////сверху слева
-	//if (posX > 0 && posY > 0 && bombsField[posY - 1][posX - 1] == 1)
-	//{
-	//	countBombsAround++;
-	//}
-	////сверху справа
-	//if (posY > 0 && posX < SIDE - 1 && bombsField[posY - 1][posX + 1] == 1)
-	//{
-	//	countBombsAround++;
-	//}
-	////слева
-	//if (posX > 0 && bombsField[posY][posX - 1] == 1)
-	//{
-	//	countBombsAround++;
-	//}
-	////справа
-	//if (posX < SIDE - 1 && bombsField[posY][posX + 1] == 1)
-	//{
-	//	countBombsAround++;
-	//}
-	////снизу
-	//if (posY < SIDE - 1 && bombsField[posY + 1][posX] == 1)
-	//{
-	//	countBombsAround++;
-	//}
-	////снизу слева
-	//if (posY < SIDE - 1 && posX > 0 && bombsField[posY + 1][posX - 1] == 1)
-	//{
-	//	countBombsAround++;
-	//}
-	////снизу справа
-	//if (posX < SIDE - 1 && posY < SIDE - 1 && bombsField[posY + 1][posX + 1] == 1)
-	//{
-	//	countBombsAround++;
-	//}
 	
 	return countBombsAround;
 }
 
+
+//рекурсивная функция для раскрытия поля
 int OpenSpace(int posY, int posX, int cache[])
 {
 
@@ -273,8 +204,8 @@ int OpenSpace(int posY, int posX, int cache[])
 	return 0;
 
 }
-//выводит сообщение о проигрыше, если игрок попал на мину, подсчитывает кол-во мин вокруг 
-//в идеале разбить на несколько функций
+
+
 int SetPos()
 {
 	printf("Введите значение в формате XY:\t");
@@ -290,13 +221,6 @@ int SetPos()
 			return 1;
 		}
 	}
-
-	
-	//int countBombsAround = 0;
-
-	//countBombsAround = BombsAround(posY, posX);
-	
-	//Filling(countBombsAround, posY, posX);
 
 	int cache[SIDE * SIDE];
 	for (int i = 0; i < SIDE*SIDE; i++)
@@ -325,7 +249,6 @@ void StartField(int iteration)
 
 	srand(time(NULL));
 	
-	//заполнение массива координат рандомными значениями от 0 до 7 включительно
 	for (int i = 0; i < SIDE; i++)
 		for (int j = 0; j < SIDE; j++)
 		{
@@ -398,7 +321,7 @@ void Clear()
 
 int main() 
 {
-	setlocale(LC_ALL, "Ru"); //локализация
+	setlocale(LC_ALL, "Ru");
 	
 	int a = 1; 
 
@@ -409,7 +332,6 @@ int main()
 	{
 		if (iteration == 0)
 		{
-			//Level();
 			system("cls");
 			StartField(iteration);
 		}
@@ -436,11 +358,9 @@ int main()
 			system("cls");
 			PrintField();
 			iteration++;
-			//Clear();
 		}
 		else
 		{
-			//system("cls");
 			FinalField();
 			PrintField();
 			printf("\nYou lost!\n");

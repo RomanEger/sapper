@@ -1,6 +1,6 @@
-﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(534,5): warning MSB8028: промежуточный каталог (x64\Debug\) содержит файлы, которые используются совместно с другим проектом (First.vcxproj).  Это может привести к ошибкам очистки и перестроения.
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8028: промежуточный каталог (x64\Debug\) содержит файлы, которые используются совместно с другим проектом (First.vcxproj).  Это может привести к ошибкам очистки и перестроения.
   main.c
-D:\projects vs\C PROJECTS\sapper\First\First\main.c(326,8): warning C4244: функция: преобразование "time_t" в "unsigned int", возможна потеря данных
-D:\projects vs\C PROJECTS\sapper\First\First\main.c(111): warning C4715: ReadPosition: значение возвращается не при всех путях выполнения
-D:\projects vs\C PROJECTS\sapper\First\First\main.c(130): warning C4715: Restart: значение возвращается не при всех путях выполнения
-  First.vcxproj -> D:\projects vs\C PROJECTS\sapper\First\x64\Debug\Sapper.exe
+D:\projectsVS\C PROJECTS\sapper\First\First\main.c(326,8): warning C4244: функция: преобразование "time_t" в "unsigned int", возможна потеря данных
+D:\projectsVS\C PROJECTS\sapper\First\First\main.c(111): warning C4715: ReadPosition: значение возвращается не при всех путях выполнения
+D:\projectsVS\C PROJECTS\sapper\First\First\main.c(130): warning C4715: Restart: значение возвращается не при всех путях выполнения
+  First.vcxproj -> D:\projectsVS\C PROJECTS\sapper\First\x64\Debug\Sapper.exe
